@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { fetchGoods } from "../api/Api";
 import { nanoid } from "nanoid";
 
@@ -58,7 +57,6 @@ const ShopPage = () => {
   return (
     <div>
       <h1>Shop Page</h1>
-
       <div>
         {shops.map((shop) => (
           <button
@@ -74,8 +72,6 @@ const ShopPage = () => {
         {selectedShop && (
           <div>
             <h2>{selectedShop}</h2>
-            <Link to="/cart">Go to Cart</Link>
-
             {products
               .filter((item) => item.shop === selectedShop)
               .map((item) => (
