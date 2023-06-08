@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "https://647ed711c246f166da8f7790.mockapi.io";
+const BASE_URL = process.env.REACT_APP_MOCKAPI_KEY;
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -32,22 +32,6 @@ export const fetchOrderHistory = async () => {
     return response.data;
   } catch (error) {
     console.error("Error fetching order history:", error);
-    return [];
-  }
-};
-
-export const fetchOrderById = async (email, phone, orderId) => {
-  try {
-    const response = await api.get("/ordersHistory", {
-      params: {
-        email,
-        phone,
-        id: orderId,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching order by ID:", error);
     return [];
   }
 };
