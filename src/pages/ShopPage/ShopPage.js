@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { fetchGoods } from "../api/Api";
+import { fetchGoods } from "../../api/Api";
 import { nanoid } from "nanoid";
+import ProductCard from "../../components/ProductCard/ProductCard";
+import css from "./ShopPage.module.css";
+import shopImg from "./images/shopImg.png";
 
 const ShopPage = () => {
   const [shops, setShops] = useState([]);
@@ -36,14 +39,12 @@ const ShopPage = () => {
   };
 
   const handleAddToCart = (product) => {
-    const itemIndex = cartItems.findIndex((item) => item.id === product.id);
-    if (itemIndex !== -1) {
-      const updatedCartItems = [...cartItems];
-      updatedCartItems.splice(itemIndex, 1);
-      setCartItems(updatedCartItems);
-    } else {
-      setCartItems((prevItems) => [...prevItems, product]);
-    }
+    setCartItems((prevItems) => [...prevItems, product]);
+  };
+
+  const handleRemoveFromCart = (product) => {
+    const updatedCartItems = cartItems.filter((item) => item.id !== product.id);
+    setCartItems(updatedCartItems);
   };
 
   const isProductAddedToCart = (product) => {
@@ -56,10 +57,12 @@ const ShopPage = () => {
 
   return (
     <div>
-      <h1>Shop Page</h1>
-      <div>
+      <img className={css.shopImage} src={shopImg} alt="shopImage" />
+      <h1 className={css.title}>Shops</h1>
+      <div className={css.shopButtonsWrapper}>
         {shops.map((shop) => (
           <button
+            className={css.button}
             key={nanoid()}
             onClick={() => handleShopSelect(shop)}
             disabled={!isShopActive(shop)}
@@ -71,22 +74,20 @@ const ShopPage = () => {
       <div>
         {selectedShop && (
           <div>
-            <h2>{selectedShop}</h2>
-            {products
-              .filter((item) => item.shop === selectedShop)
-              .map((item) => (
-                <div key={nanoid()}>
-                  <img src={item.image} alt={item.goods} />
-                  <p>{item.goods}</p>
-                  <p>{item.cost}</p>
-                  <button
-                    onClick={() => handleAddToCart(item)}
-                    disabled={!isShopActive(selectedShop)}
-                  >
-                    {isProductAddedToCart(item) ? "Added" : "Add to Cart"}
-                  </button>
-                </div>
-              ))}
+            <h2 className={css.shopName}>{selectedShop}</h2>
+            <div className={css.cardWrapper}>
+              {products
+                .filter((item) => item.shop === selectedShop)
+                .map((item) => (
+                  <ProductCard
+                    key={item.id}
+                    product={item}
+                    addToCart={handleAddToCart}
+                    removeFromCart={handleRemoveFromCart}
+                    isProductAdded={isProductAddedToCart(item)}
+                  />
+                ))}
+            </div>
           </div>
         )}
       </div>

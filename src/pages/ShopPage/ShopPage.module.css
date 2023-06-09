@@ -1,0 +1,64 @@
+.button {
+  width: 150px;
+  height: 50px;
+  color: #333333;
+  box-shadow: 0px 3.43693px 3.43693px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  border: none;
+  font-weight: 600;
+}
+.shopImage {
+  top: 0px;
+  left: 170px;
+  width: 200px;
+
+  position: fixed;
+  opacity: 0.7;
+
+  z-index: -1;
+}
+
+.title {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  color: green;
+  font-size: 36px;
+}
+.button:hover {
+  box-shadow: 2px 6px 5px -2px rgba(0, 0, 0, 0.54);
+  color: green;
+}
+.cardWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.shopName {
+  color: green;
+  font-size: 36px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+.shopButtonsWrapper {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+@media screen and (min-width: 768px) {
+  .button {
+    height: 40px;
+  }
+  .shopImage {
+    width: 500px;
+    top: -40px;
+    left: 200px;
+  }
+}
+@media screen and (min-width: 1440px) {
+  .shopImage {
+    width: 700px;
+    top: 0px;
+    left: 700px;
+  }
+}
