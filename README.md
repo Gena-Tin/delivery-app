@@ -1,70 +1,156 @@
-# Getting Started with Create React App
+# Delivery Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a simple shopping cart application built with React. It allows users choose a store, to add items to their cart, view the cart contents, update the quantity of items, and place an order by providing their contact and address information.
 
-## Available Scripts
+The application is designed to be responsive and can be accessed on **mobile phones**, **tablets**, and **desktop** devices.
 
-In the project directory, you can run:
+![Shopping Cart](./public/shoppingCart.png)
 
-### `npm start`
+## Features:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Add to Cart:** Users can browse through the available products and add them to their cart (_user can order goods from only one store_)
+- **Cart Page:** Users can view the items in their cart, update the quantity of items, and remove items from the cart.
+- **Order Submission:** Users can provide their contact information (name, email, phone) and address to place an order. The order is then submitted to the order history. The contact information undergoes validation to ensure its correctness.
+- **Order History:** Users can view their order history, including order details and item information.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Screenshots:
 
-### `npm test`
+1. **Home Page**
+   ![Home Page](./public/homePage.png)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. **Cart Page**
+   ![Cart Page](./public/cartPage.png)
 
-### `npm run build`
+3. **Order History Page**
+   ![Order History Page](./public/orderHistoryPage.png)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Database Structure:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The application uses [**Mockapi.io**](https://mockapi.io/) as a database, to store and manage the necessary data. The following describes the structure of the database and the types of data stored:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+#### Products:
 
-### `npm run eject`
+```json
+[
+ {
+  "image": "https://freefoodphotos.com/imagelibrary/breakfast/slides/helathy_breakfast.jpg",
+  "goods": "Square egg sunny side up on a crumpet",
+  "shop": "FastBreakFast",
+  "cost": 3,
+  "quantity": 1,
+  "id": "1"
+ },
+ ......
+]
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+#### Orders:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```json
+[
+......
+ {
+  "name": "John Doe",
+  "phone": "0123456789",
+  "email": "mail@mail.com",
+  "address": "Home",
+  "goods": [
+   {
+    "image": "https://freefoodphotos.com/imagelibrary/breakfast/slides/helathy_breakfast.jpg",
+    "goods": "Square egg sunny side up on a crumpet",
+    "shop": "FastBreakFast",
+    "cost": 3,
+    "quantity": 1,
+    "id": "1"
+   },
+   {
+    "image": "https://freefoodphotos.com/imagelibrary/breakfast/slides/ham_eggs.jpg",
+    "goods": "Grilled ham and eggs",
+    "shop": "FastBreakFast",
+    "cost": 5,
+    "quantity": 1,
+    "id": "2"
+   }
+  ],
+  "totalPrice": 8,
+  "orderCode": "MEDe",
+  "id": "22"
+ },
+ ......
+]
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Installation:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. **Clone the repository:**
 
-## Learn More
+   ```bash
+   git clone https://github.com/Gena-Tin/delivery-app.git
+   ```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+2. **Navigate to the project directory:**
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+   ```bash
+   cd delivery-app
+   ```
 
-### Code Splitting
+3. **Install the dependencies:**
+   ```bash
+   npm install
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Usage:
 
-### Analyzing the Bundle Size
+1. **Start the development server:**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+   ```bash
+   npm start
+   ```
 
-### Making a Progressive Web App
+2. **Open the application in your browser:**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+   ```python
+   http://localhost:3000
+   ```
 
-### Advanced Configuration
+3. Or make your life easier and just go to the live page: [Delivery App](https://delivery-app-gt.netlify.app/)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Technologies Used
 
-### Deployment
+- React
+- React Router
+- HTML
+- CSS
+- JavaScript
+- Mockapi
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Project tree
 
-### `npm run build` fails to minify
+```
+│
+└─ src
+   ├─ App.js
+   ├─ api
+   ├─ components
+   │  ├─ CartItem
+   │  ├─ Footer
+   │  ├─ Header
+   │  ├─ Loader
+   │  ├─ NotFoundRedirect
+   │  ├─ OrderCard
+   │  └─ ProductCard
+   └─ pages
+      ├─ CartPage
+      ├─ OrderHistoryPage
+      └─ ShopPage
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```
+
+## Contributing:
+
+Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request.
+
+## Acknowledgements:
+
+- The shopping cart icon used in the application is from [**Iconfinder**](https://www.iconfinder.com/).
+- The product images used in the application are for demonstration purposes only and belong to their respective owners.

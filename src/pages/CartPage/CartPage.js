@@ -158,7 +158,7 @@ const CartPage = () => {
               Phone:*
               <input
                 type="tel"
-                placeholder="(123)123-12-13"
+                placeholder="0991231213"
                 value={phone}
                 onChange={handlePhoneChange}
                 className={phoneError ? css.invalidInput : ""}
