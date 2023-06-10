@@ -2,28 +2,15 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding-left: 50px;
+  /* padding-left: 15px; */
   font-size: 18px;
   font-weight: 600;
   height: 50px;
   gap: 30px;
 }
 
-/* .logo {
-  width: 50px;
-
-  position: absolute;
-  z-index: -1;
-} */
-@media screen and (max-width: 768px) {
-  /* .logo {
-    position: fixed;
-    top: 0px;
-    left: 175px;
-    opacity: 0.7;
-    width: 200px;
-  } */
+/* @media screen and (max-width: 768px) {
   .navLink {
     padding-left: 15px;
   }
-}
+} */

@@ -127,11 +127,12 @@ select {
   color: green;
   stroke: green;
 }
+
 .container {
+  margin: 0 auto;
   max-width: 375px;
-  padding-left: 15px;
-  padding-right: 15px;
-  margin: 0, auto;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 @media screen and (min-width: 768px) {
@@ -142,8 +143,6 @@ select {
 
 @media screen and (min-width: 1440px) {
   .container {
-    max-width: 1440px;
-    padding-left: 165px;
-    padding-right: 165px;
+    max-width: 1142px;
   }
 }

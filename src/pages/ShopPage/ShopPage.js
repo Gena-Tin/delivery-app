@@ -3,18 +3,20 @@ import { fetchGoods } from "../../api/Api";
 import { nanoid } from "nanoid";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import css from "./ShopPage.module.css";
-import shopImg from "./images/shopImg.png";
+import Loader from "../../components/Loader/Loader";
 
 const ShopPage = () => {
   const [shops, setShops] = useState([]);
   const [selectedShop, setSelectedShop] = useState(null);
   const [products, setProducts] = useState([]);
   const [cartItems, setCartItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetchGoods().then((data) => {
       setShops(getUniqueShops(data));
       setProducts(data);
+      setIsLoading(false);
     });
   }, []);
 
@@ -57,8 +59,8 @@ const ShopPage = () => {
 
   return (
     <div>
-      <img className={css.shopImage} src={shopImg} alt="shopImage" />
       <h1 className={css.title}>Shops</h1>
+      {isLoading && <Loader />}
       <div className={css.shopButtonsWrapper}>
         {shops.map((shop) => (
           <button
