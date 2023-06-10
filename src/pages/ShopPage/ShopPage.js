@@ -4,6 +4,7 @@ import { nanoid } from "nanoid";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import css from "./ShopPage.module.css";
 import Loader from "../../components/Loader/Loader";
+import shoppingCart from "./images/shoppingCart.png";
 
 const ShopPage = () => {
   const [shops, setShops] = useState([]);
@@ -58,42 +59,50 @@ const ShopPage = () => {
   };
 
   return (
-    <div>
+    <>
       <h1 className={css.title}>Shops</h1>
-      {isLoading && <Loader />}
-      <div className={css.shopButtonsWrapper}>
-        {shops.map((shop) => (
-          <button
-            className={css.button}
-            key={nanoid()}
-            onClick={() => handleShopSelect(shop)}
-            disabled={!isShopActive(shop)}
-          >
-            {shop}
-          </button>
-        ))}
-      </div>
-      <div>
-        {selectedShop && (
-          <div>
-            <h2 className={css.shopName}>{selectedShop}</h2>
-            <div className={css.cardWrapper}>
-              {products
-                .filter((item) => item.shop === selectedShop)
-                .map((item) => (
-                  <ProductCard
-                    key={item.id}
-                    product={item}
-                    addToCart={handleAddToCart}
-                    removeFromCart={handleRemoveFromCart}
-                    isProductAdded={isProductAddedToCart(item)}
-                  />
-                ))}
+      <div className={css.shopPageSecton}>
+        <p className={css.goodsQuantity}>{cartItems.length}</p>
+        <img
+          className={css.shoppingCartImg}
+          src={shoppingCart}
+          alt="shopping cart"
+        />
+        {isLoading && <Loader />}
+        <div className={css.shopButtonsWrapper}>
+          {shops.map((shop) => (
+            <button
+              className={css.button}
+              key={nanoid()}
+              onClick={() => handleShopSelect(shop)}
+              disabled={!isShopActive(shop)}
+            >
+              {shop}
+            </button>
+          ))}
+        </div>
+        <div>
+          {selectedShop && (
+            <div>
+              <h2 className={css.shopName}>{selectedShop}</h2>
+              <div className={css.cardWrapper}>
+                {products
+                  .filter((item) => item.shop === selectedShop)
+                  .map((item) => (
+                    <ProductCard
+                      key={item.id}
+                      product={item}
+                      addToCart={handleAddToCart}
+                      removeFromCart={handleRemoveFromCart}
+                      isProductAdded={isProductAddedToCart(item)}
+                    />
+                  ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

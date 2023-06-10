@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { postToOrderHistory } from "../../api/Api";
 import css from "./CartPage.module.css";
-// import cartImage from "./images/cartImg.png";
 import CartItem from "../../components/CartItem/CartItem";
 import { nanoid } from "nanoid";
 
@@ -12,6 +11,9 @@ const CartPage = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
+  const [addressError, setAddressError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [phoneError, setPhoneError] = useState(false);
 
   useEffect(() => {
     const storedCartItems = JSON.parse(localStorage.getItem("cartItems"));
@@ -44,12 +46,49 @@ const CartPage = () => {
     calculateTotalPrice();
   };
 
+  const handleClearCart = () => {
+    localStorage.setItem("cartItems", JSON.stringify([]));
+    setCartItems([]);
+  };
+
+  const validateAddress = (value) => {
+    return value.trim().length > 0 && value.trim().length <= 100;
+  };
+
+  const validateEmail = (value) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return value.trim().length > 0 && emailRegex.test(value.trim());
+  };
+
+  const validatePhone = (value) => {
+    const phoneRegex = /^\d{10}$/;
+    return value.trim().length > 0 && phoneRegex.test(value.trim());
+  };
+
+  const handleAddressChange = (e) => {
+    const value = e.target.value.trim();
+    setAddress(value);
+    setAddressError(!validateAddress(value));
+  };
+
+  const handleEmailChange = (e) => {
+    const value = e.target.value.trim();
+    setEmail(value);
+    setEmailError(!validateEmail(value));
+  };
+
+  const handlePhoneChange = (e) => {
+    const value = e.target.value.trim();
+    setPhone(value);
+    setPhoneError(!validatePhone(value));
+  };
+
   const handleSubmit = async () => {
     const order = {
-      name,
-      phone,
-      email,
-      address,
+      name: name.trim(),
+      phone: phone.trim(),
+      email: email.trim(),
+      address: address.trim(),
       totalPrice,
       orderCode: nanoid(4),
       goods: cartItems,
@@ -89,34 +128,52 @@ const CartPage = () => {
               Address:*
               <input
                 type="text"
-                placeholder=" Address"
+                placeholder="Address"
                 value={address}
-                onChange={(e) => setAddress(e.target.value)}
+                onChange={handleAddressChange}
+                className={addressError ? css.invalidInput : ""}
               />
+              {addressError && (
+                <p className={css.errorMsg}>
+                  Please enter a valid address (1-100 characters).
+                </p>
+              )}
             </label>
             <label>
               Email:*
               <input
                 type="email"
-                placeholder=" mail@mail.com"
+                placeholder="mail@mail.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleEmailChange}
+                className={emailError ? css.invalidInput : ""}
               />
+              {emailError && (
+                <p className={css.errorMsg}>
+                  Please enter a valid email address.
+                </p>
+              )}
             </label>
             <label>
               Phone:*
               <input
                 type="tel"
-                placeholder=" (123)123-12-13"
+                placeholder="(123)123-12-13"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={handlePhoneChange}
+                className={phoneError ? css.invalidInput : ""}
               />
+              {phoneError && (
+                <p className={css.errorMsg}>
+                  Please enter a valid phone number (10 digits).
+                </p>
+              )}
             </label>
             <label>
               Name:*
               <input
                 type="text"
-                placeholder=" John Doe"
+                placeholder="John Doe"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
@@ -124,14 +181,25 @@ const CartPage = () => {
             <button
               className={css.submitBtn}
               onClick={handleSubmit}
-              disabled={!address || !email || !phone || !name}
+              disabled={
+                !address ||
+                !email ||
+                !phone ||
+                !name ||
+                addressError ||
+                emailError ||
+                phoneError
+              }
             >
               Submit
             </button>
           </div>
+          <button className={css.clearCartBtn} onClick={handleClearCart}>
+            Clear Cart
+          </button>
         </div>
       ) : (
-        <p className={css.noItemsText}>Youre cart is empty</p>
+        <p className={css.noItemsText}>Your cart is empty</p>
       )}
     </div>
   );

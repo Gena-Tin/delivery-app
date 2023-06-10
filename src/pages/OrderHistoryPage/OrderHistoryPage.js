@@ -17,9 +17,9 @@ const OrderHistoryPage = () => {
     if (searchCriteria) {
       const filtered = orders.filter(
         (order) =>
-          order.email === searchCriteria ||
-          order.phone === searchCriteria ||
-          order.orderCode === searchCriteria
+          order.email === searchCriteria.trim() ||
+          order.phone === searchCriteria.trim() ||
+          order.orderCode === searchCriteria.trim()
       );
       setFilteredOrders(filtered);
     } else {
