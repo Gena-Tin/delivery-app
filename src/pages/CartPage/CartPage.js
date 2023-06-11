@@ -47,7 +47,7 @@ const CartPage = () => {
   };
 
   const handleClearCart = () => {
-    localStorage.setItem("cartItems", JSON.stringify([]));
+    localStorage.removeItem("cartItems");
     setCartItems([]);
   };
 
