@@ -5,6 +5,7 @@ import ProductCard from "../../components/ProductCard/ProductCard";
 import css from "./ShopPage.module.css";
 import Loader from "../../components/Loader/Loader";
 import shoppingCart from "./images/shoppingCart.png";
+import { Link } from "react-router-dom";
 
 const ShopPage = () => {
   const [shops, setShops] = useState([]);
@@ -62,12 +63,14 @@ const ShopPage = () => {
     <>
       <h1 className={css.title}>Shops</h1>
       <div className={css.shopPageSecton}>
-        <p className={css.goodsQuantity}>{cartItems.length}</p>
-        <img
-          className={css.shoppingCartImg}
-          src={shoppingCart}
-          alt="shopping cart"
-        />
+        <Link to="/cart">
+          <p className={css.goodsQuantity}>{cartItems.length}</p>
+          <img
+            className={css.shoppingCartImg}
+            src={shoppingCart}
+            alt="shopping cart"
+          />
+        </Link>
         {isLoading && <Loader />}
         <div className={css.shopButtonsWrapper}>
           {shops.map((shop) => (
