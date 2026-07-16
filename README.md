@@ -1,17 +1,19 @@
 # Delivery Application
 
-This is a simple shopping cart application built with React. It allows users choose a store, to add items to their cart, view the cart contents, update the quantity of items, and place an order by providing their contact and address information.
+This is a modern fullstack shopping cart and delivery application built with React, Node.js (Express), TypeScript, and PostgreSQL. It allows users to choose a store, add items to their cart, view cart contents, update item quantities, and place an order.
 
-The application is designed to be responsive and can be accessed on **mobile phones**, **tablets**, and **desktop** devices.
+A key feature of the application is the ability for users to specify their exact delivery location on an interactive map (perfect for ordering while outdoors).
+
+The application is designed to be fully responsive and optimized for **mobile phones**, **tablets**, and **desktop** devices.
 
 ![Shopping Cart](./public/shoppingCart.png)
 
 ## Features:
 
-- **Add to Cart:** Users can browse through the available products and add them to their cart (_user can order goods from only one store_)
-- **Cart Page:** Users can view the items in their cart, update the quantity of items, and remove items from the cart.
-- **Order Submission:** Users can provide their contact information (name, email, phone) and address to place an order. The order is then submitted to the order history. The contact information undergoes validation to ensure its correctness.
-- **Order History:** Users can view their order history, including order details and item information.
+- **Add to Cart:** Browse through available products and add them to the cart (_users can order goods from only one store at a time_).
+- **Cart Page:** View items, dynamically update quantities, and remove items.
+- **Order Submission with Geolocation:** Place an order by providing contact information (name, email, phone) and optionally **pinning your delivery location on the map** (ideal for immediate, on-the-street delivery using precise coordinates).
+- **Order History:** View past orders, including item breakdowns, costs, and exact delivery locations.
 
 ## Screenshots:
 
@@ -26,124 +28,162 @@ The application is designed to be responsive and can be accessed on **mobile pho
 
 ## Database Structure:
 
-The application uses [**Mockapi.io**](https://mockapi.io/) as a database, to store and manage the necessary data. The following describes the structure of the database and the types of data stored:
+#### Database Schema:
 
-#### Products:
+```sql
+CREATE SCHEMA IF NOT EXISTS shop;
 
-```json
-[
- {
-  "image": "https://freefoodphotos.com/imagelibrary/breakfast/slides/helathy_breakfast.jpg",
-  "goods": "Square egg sunny side up on a crumpet",
-  "shop": "FastBreakFast",
-  "cost": 3,
-  "quantity": 1,
-  "id": "1"
- },
- ......
-]
+-- Stores
+CREATE TABLE shop.shops (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    image TEXT,
+    details JSONB DEFAULT '{}'::jsonb
+);
+
+-- Goods
+CREATE TABLE shop.goods (
+    id SERIAL PRIMARY KEY,
+    shop_id INTEGER REFERENCES shop.shops(id) ON DELETE CASCADE,
+    title VARCHAR(255) NOT NULL,
+    image TEXT,
+    cost NUMERIC(10, 2) NOT NULL,
+    attributes JSONB DEFAULT '{}'::jsonb
+);
+
+-- Orders (NoSQL hybrid via JSONB)
+CREATE TABLE shop.orders (
+    id SERIAL PRIMARY KEY,
+    order_code VARCHAR(50) UNIQUE NOT NULL,
+    status VARCHAR(50) DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    order_data JSONB NOT NULL -- Customer info, item snapshots, and delivery coordinates
+);
 ```
 
-#### Orders:
+#### Order JSONB Document Structure (with GeoJSON support):
 
 ```json
-[
-......
- {
-  "name": "John Doe",
-  "phone": "0123456789",
-  "email": "mail@mail.com",
-  "address": "Home",
+{
+  "customer": {
+    "name": "John Doe",
+    "phone": "0970000000",
+    "email": "fester@addams.com",
+    "address": "Delivery to coordinates"
+  },
   "goods": [
-   {
-    "image": "https://freefoodphotos.com/imagelibrary/breakfast/slides/helathy_breakfast.jpg",
-    "goods": "Square egg sunny side up on a crumpet",
-    "shop": "FastBreakFast",
-    "cost": 3,
-    "quantity": 1,
-    "id": "1"
-   },
-   {
-    "image": "https://freefoodphotos.com/imagelibrary/breakfast/slides/ham_eggs.jpg",
-    "goods": "Grilled ham and eggs",
-    "shop": "FastBreakFast",
-    "cost": 5,
-    "quantity": 1,
-    "id": "2"
-   }
+    {
+      "title": "Trout fillet with vegetables",
+      "cost": 8.0,
+      "quantity": 1
+    }
   ],
-  "totalPrice": 8,
-  "orderCode": "MEDe",
-  "id": "22"
- },
- ......
-]
+  "totalPrice": 8.0,
+  "delivery_location": {
+    "type": "Point",
+    "coordinates": [43.002488, 34.080701] // [Longitude, Latitude]
+  }
+}
 ```
-
-## Installation:
-
-1. **Clone the repository:**
-
-   ```bash
-   git clone https://github.com/Gena-Tin/delivery-app.git
-   ```
-
-2. **Navigate to the project directory:**
-
-   ```bash
-   cd delivery-app
-   ```
-
-3. **Install the dependencies:**
-   ```bash
-   npm install
-   ```
-
-## Usage:
-
-1. **Start the development server:**
-
-   ```bash
-   npm start
-   ```
-
-2. **Open the application in your browser:**
-
-   ```python
-   http://localhost:3000
-   ```
-
-3. Or make your life easier and just go to the live page: [Delivery App](https://delivery-app-gt.netlify.app/)
 
 ## Technologies Used
 
-- React
-- React Router
-- HTML
-- CSS
-- JavaScript
-- Mockapi
+### Frontend:
 
-## Project tree
+- React.js
+- React Router
+- CSS (Responsive Layouts)
+
+### Backend & Database:
+
+- Node.js & Express
+- TypeScript
+- PostgreSQL (via Neon Serverless)
+- pg (node-postgres driver)
+
+## Installation & Setup
+
+### 1. **Clone the repository:**
+
+```bash
+git clone [https://github.com/Gena-Tin/delivery-app.git](https://github.com/Gena-Tin/delivery-app.git)
+cd delivery-app
+```
+
+### 2. **Backend Setup:**
+
+- Navigate to the server folder:
+
+  ```bash
+  cd server
+  ```
+
+- Install the dependencies:
+
+  ```bash
+  npm install
+  ```
+
+- Rename `.env.example` to `.env` Configure your .env file in the `server` root and add your database and port configurations
+
+  ```code
+  PORT=4000
+  DATABASE_URL=your_neon_postgresql_connection_string
+  ```
+
+- Start the development server (runs on http://localhost:4000):
+
+  ```bash
+  npm run dev
+  ```
+
+### 3. **Frontend Setup:**
+
+- Navigate to the client/frontend directory:
+
+  ```bash
+  cd ../client
+  ```
+
+- Install dependencies and run:
+
+  ```bash
+  npm install
+  npm start
+  ```
+
+- Open the app at http://localhost:3000
+
+### 4. Or make your life easier and just go to the live page: [Delivery App](https://delivery-app-gt.netlify.app/)
+
+## Project tree:
 
 ```
 │
-└─ src
-   ├─ App.js
-   ├─ api
-   ├─ components
-   │  ├─ CartItem
-   │  ├─ Footer
-   │  ├─ Header
-   │  ├─ Loader
-   │  ├─ NotFoundRedirect
-   │  ├─ OrderCard
-   │  └─ ProductCard
-   └─ pages
-      ├─ CartPage
-      ├─ OrderHistoryPage
-      └─ ShopPage
-
+├── client/                    # Frontend React Application
+│   ├── public/
+│   └─ src
+│      ├─ App.js
+│      ├─ api
+│      ├─ components           # Reusable UI Components
+│      │  ├─ CartItem
+│      │  ├─ Footer
+│      │  ├─ Header
+│      │  ├─ Loader
+│      │  ├─ NotFoundRedirect
+│      │  ├─ OrderCard
+│      │  └─ ProductCard
+│      └─ pages                # Application Pages
+│         ├─ CartPage
+│         ├─ OrderHistoryPage
+│         └─ ShopPage
+└── server/                    # Backend Express & TypeScript Application
+    ├── src/
+    │   ├── config/            # Database Pool Configuration
+    │   ├── routes/            # API Routes (Shops, Goods, Orders)
+    │   └── index.ts           # Server Entrypoint
+    ├── tsconfig.json
+    └── package.json
 ```
 
 ## Contributing:
@@ -153,4 +193,4 @@ Contributions are welcome! If you find any issues or have suggestions for improv
 ## Acknowledgements:
 
 - The shopping cart icon used in the application is from [**Iconfinder**](https://www.iconfinder.com/).
-- The product images used in the application are for demonstration purposes only and belong to their respective owners.
+- The product images used in the application are for demonstration purposes only and belong to their respective owners (courtesy of FreeFoodPhotos).
