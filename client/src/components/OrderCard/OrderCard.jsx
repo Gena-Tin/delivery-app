@@ -1,8 +1,7 @@
-import React from "react";
-import { nanoid } from "nanoid";
 import css from "./OrderCard.module.css";
+import { nanoid } from "nanoid";
 
-const OrderCard = ({ order }) => {
+export const OrderCard = ({ order }) => {
   return (
     <li key={nanoid()} className={css.orderCard}>
       <p>Name: {order.name}</p>
@@ -30,5 +29,3 @@ const OrderCard = ({ order }) => {
     </li>
   );
 };
-
-export default OrderCard;

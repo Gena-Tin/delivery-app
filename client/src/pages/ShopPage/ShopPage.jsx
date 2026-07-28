@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import css from "./ShopPage.module.css";
+import { useState, useEffect } from "react";
 import { fetchGoods } from "../../api/Api";
 import { nanoid } from "nanoid";
-import ProductCard from "../../components/ProductCard/ProductCard";
-import css from "./ShopPage.module.css";
-import Loader from "../../components/Loader/Loader";
-import shoppingCart from "./images/shoppingCart.png";
+import { ProductCard } from "../../components/ProductCard/ProductCard";
+import { Loader } from "../../components/Loader/Loader";
 import { Link } from "react-router-dom";
+import shoppingCart from "./images/shoppingCart.png";
 
-const ShopPage = () => {
+export const ShopPage = () => {
   const [shops, setShops] = useState([]);
   const [selectedShop, setSelectedShop] = useState(null);
   const [products, setProducts] = useState([]);
@@ -108,5 +108,3 @@ const ShopPage = () => {
     </>
   );
 };
-
-export default ShopPage;

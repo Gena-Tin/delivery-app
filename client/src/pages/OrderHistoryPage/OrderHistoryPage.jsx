@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import css from "./OrderHistoryPage.module.css";
+import { useState, useEffect } from "react";
 import { fetchOrderHistory } from "../../api/Api";
 import { nanoid } from "nanoid";
-import css from "./OrderHistoryPage.module.css";
-import OrderCard from "../../components/OrderCard/OrderCard";
+import { OrderCard } from "../../components/OrderCard/OrderCard";
 
-const OrderHistoryPage = () => {
+export const OrderHistoryPage = () => {
   const [orders, setOrders] = useState([]);
   const [searchCriteria, setSearchCriteria] = useState("");
   const [filteredOrders, setFilteredOrders] = useState([]);
@@ -19,7 +19,7 @@ const OrderHistoryPage = () => {
         (order) =>
           order.email === searchCriteria.trim() ||
           order.phone === searchCriteria.trim() ||
-          order.orderCode === searchCriteria.trim()
+          order.orderCode === searchCriteria.trim(),
       );
       setFilteredOrders(filtered);
     } else {
@@ -60,5 +60,3 @@ const OrderHistoryPage = () => {
     </div>
   );
 };
-
-export default OrderHistoryPage;

@@ -1,8 +1,7 @@
-import React from "react";
-import { nanoid } from "nanoid";
 import css from "./ProductCard.module.css";
+import { nanoid } from "nanoid";
 
-const ProductCard = ({
+export const ProductCard = ({
   product,
   addToCart,
   removeFromCart,
@@ -28,5 +27,3 @@ const ProductCard = ({
     </div>
   );
 };
-
-export default ProductCard;

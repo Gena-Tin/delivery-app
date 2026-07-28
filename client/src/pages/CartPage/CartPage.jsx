@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { postToOrderHistory } from "../../api/Api";
 import css from "./CartPage.module.css";
-import CartItem from "../../components/CartItem/CartItem";
+import { useState, useEffect, useCallback } from "react";
+import { postToOrderHistory } from "../../api/Api";
+import { CartItem } from "../../components/CartItem/CartItem";
 import { nanoid } from "nanoid";
 
-const CartPage = () => {
+export const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [address, setAddress] = useState("");
@@ -25,7 +25,7 @@ const CartPage = () => {
   const calculateTotalPrice = useCallback(() => {
     const totalPrice = cartItems.reduce(
       (total, item) => total + item.cost * item.quantity,
-      0
+      0,
     );
     setTotalPrice(totalPrice);
   }, [cartItems]);
@@ -41,7 +41,7 @@ const CartPage = () => {
 
   const handleQuantityChange = (id, quantity) => {
     setCartItems((prevItems) =>
-      prevItems.map((item) => (item.id === id ? { ...item, quantity } : item))
+      prevItems.map((item) => (item.id === id ? { ...item, quantity } : item)),
     );
     calculateTotalPrice();
   };
@@ -204,5 +204,3 @@ const CartPage = () => {
     </div>
   );
 };
-
-export default CartPage;

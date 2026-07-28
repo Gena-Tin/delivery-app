@@ -1,13 +1,12 @@
-import React from "react";
 import { Routes, Route } from "react-router-dom";
-import ShopPage from "./pages/ShopPage/ShopPage";
-import CartPage from "./pages/CartPage/CartPage";
-import OrderHistoryPage from "./pages/OrderHistoryPage/OrderHistoryPage";
-import NotFoundRedirect from "./components/NotFoundRedirect";
-import Header from "./components/Header/Header";
-import Footer from "./components/Footer/Footer";
+import { ShopPage } from "./pages/ShopPage/ShopPage";
+import { CartPage } from "./pages/CartPage/CartPage";
+import { OrderHistoryPage } from "./pages/OrderHistoryPage/OrderHistoryPage";
+import { NotFoundRedirect } from "./components/NotFoundRedirect";
+import { Header } from "./components/Header/Header";
+import { Footer } from "./components/Footer/Footer";
 
-const App = () => {
+export const App = () => {
   return (
     <div className="container">
       <Header />
@@ -21,5 +20,3 @@ const App = () => {
     </div>
   );
 };
-
-export default App;

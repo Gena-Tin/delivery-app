@@ -1,8 +1,7 @@
-import React from "react";
-import { nanoid } from "nanoid";
 import css from "./CartItem.module.css";
+import { nanoid } from "nanoid";
 
-const CartItem = ({ item, handleQuantityChange, handleRemoveItem }) => {
+export const CartItem = ({ item, handleQuantityChange, handleRemoveItem }) => {
   const totalPrice = item.cost * item.quantity;
   return (
     <div className={css.card} key={nanoid()}>
@@ -33,5 +32,3 @@ const CartItem = ({ item, handleQuantityChange, handleRemoveItem }) => {
     </div>
   );
 };
-
-export default CartItem;
