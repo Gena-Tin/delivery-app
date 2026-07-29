@@ -7,7 +7,7 @@ import { query } from "./config/db.js";
 import { shopRoutes } from "./routes/shop.routes.js"; // <- Импортируем роуты
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4000;
 
 // Middleware
 app.use(cors());
@@ -40,3 +40,5 @@ app.listen(PORT, () => {
 });
 // Костыль для удержания Event Loop, если лоадер завершает процесс
 setInterval(() => {}, 1 << 30);
+
+export default app;
