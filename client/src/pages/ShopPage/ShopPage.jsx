@@ -34,7 +34,9 @@ export const ShopPage = () => {
   }, [cartItems]);
 
   const getUniqueShops = (data) => {
-    const shops = data.map((item) => item.shop);
+    // const shops = data.map((item) => item.shop);
+    const shops = data.map((item) => item.shop_name);
+
     return Array.from(new Set(shops));
   };
 
@@ -90,7 +92,7 @@ export const ShopPage = () => {
               <h2 className={css.shopName}>{selectedShop}</h2>
               <div className={css.cardWrapper}>
                 {products
-                  .filter((item) => item.shop === selectedShop)
+                  .filter((item) => item.shop_name === selectedShop)
                   .map((item) => (
                     <ProductCard
                       key={item.id}

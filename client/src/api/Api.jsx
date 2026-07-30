@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const BASE_URL = process.env.REACT_APP_MOCKAPI_KEY;
+// const BASE_URL = process.env.REACT_APP_MOCKAPI_KEY;
+const BASE_URL = process.env.REACT_APP_EXPRESS_API_KEY;
 
 const api = axios.create({
   baseURL: BASE_URL,
