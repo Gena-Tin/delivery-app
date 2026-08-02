@@ -5,7 +5,11 @@ import { CartItem } from "../../components/CartItem/CartItem";
 import { nanoid } from "nanoid";
 
 export const CartPage = () => {
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState(() => {
+    const storedCartItems = localStorage.getItem("cartItems");
+    return storedCartItems ? JSON.parse(storedCartItems) : [];
+  });
+
   const [address, setAddress] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -14,23 +18,12 @@ export const CartPage = () => {
   const [emailError, setEmailError] = useState(false);
   const [phoneError, setPhoneError] = useState(false);
 
-  // Загружаем корзину при монтировании и гарантируем наличие quantity >= 1
+  // Сохраняем актуальную корзину в localStorage при любом изменении cartItems
   useEffect(() => {
-    const storedCartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-    const normalizedItems = storedCartItems.map((item) => ({
-      ...item,
-      quantity: item.quantity && item.quantity > 0 ? item.quantity : 1,
-    }));
-    setCartItems(normalizedItems);
-  }, []);
-
-  // Сохраняем изменения корзины в localStorage при любом обновлении cartItems
-  useEffect(() => {
-    if (cartItems.length > 0) {
-      localStorage.setItem("cartItems", JSON.stringify(cartItems));
-    }
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
 
+  // Вычисляем итоговую стоимость "на лету"
   const totalPrice = cartItems
     .reduce((total, item) => {
       const price = Number(item.cost) || 0;
@@ -40,13 +33,11 @@ export const CartPage = () => {
     .toFixed(2);
 
   const handleRemoveItem = (id) => {
-    const updatedCart = cartItems.filter((item) => item.id !== id);
-    setCartItems(updatedCart);
-    localStorage.setItem("cartItems", JSON.stringify(updatedCart));
+    setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
 
   const handleQuantityChange = (id, newQuantity) => {
-    // Не даем опустить количество ниже 1 (если пустой ввод/NaN, ставим 1)
+    // Не даем опустить количество ниже 1 (если пользователь очистил инпут или ввел 0/отрицательное число)
     const validQuantity =
       isNaN(newQuantity) || newQuantity < 1 ? 1 : newQuantity;
 
@@ -58,8 +49,8 @@ export const CartPage = () => {
   };
 
   const handleClearCart = () => {
-    localStorage.removeItem("cartItems");
     setCartItems([]);
+    localStorage.removeItem("cartItems");
   };
 
   const validateAddress = (value) =>
