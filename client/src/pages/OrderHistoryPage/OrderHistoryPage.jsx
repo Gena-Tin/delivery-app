@@ -1,7 +1,6 @@
 import css from "./OrderHistoryPage.module.css";
 import { useState, useEffect } from "react";
 import { fetchOrderHistory } from "../../api/Api";
-import { nanoid } from "nanoid";
 import { OrderCard } from "../../components/OrderCard/OrderCard";
 
 export const OrderHistoryPage = () => {
@@ -50,7 +49,7 @@ export const OrderHistoryPage = () => {
         {filteredOrders.length > 0 ? (
           <ul>
             {filteredOrders.map((order) => (
-              <OrderCard key={nanoid()} order={order} />
+              <OrderCard order={order} />
             ))}
           </ul>
         ) : (

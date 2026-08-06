@@ -1,5 +1,4 @@
 import css from "./ProductCard.module.css";
-import { nanoid } from "nanoid";
 
 export const ProductCard = ({
   product,
@@ -8,7 +7,7 @@ export const ProductCard = ({
   isProductAdded,
 }) => {
   return (
-    <div className={css.card} key={nanoid()}>
+    <div className={css.card} key={product.id}>
       <div className={css.imgWrapper}>
         {/* <img className={css.image} src={product.image} alt={product.goods} /> */}
         <img className={css.image} src={product.image} alt={product.title} />

@@ -1,18 +1,17 @@
 import css from "./OrderCard.module.css";
-import { nanoid } from "nanoid";
 
 export const OrderCard = ({ order }) => {
   return (
-    <li key={nanoid()} className={css.orderCard}>
+    <li key={order.id} className={css.orderCard}>
       <p>Name: {order.name}</p>
-      <p>Order Code: {order.orderCode}</p>
+      <p>Order Code: {order.id}</p>
       <p>Email: {order.email}</p>
       <p>Phone: {order.phone}</p>
       <p>Address: {order.address}</p>
       <p>Total Price: ${order.totalPrice}</p>
       <ul>
         {order.goods.map((item) => (
-          <li key={nanoid()} className={css.item}>
+          <li key={item.id} className={css.item}>
             <div className={css.goodsCard}>
               <div className={css.imgWrapper}>
                 <img src={item.image} alt={item.goods} />
