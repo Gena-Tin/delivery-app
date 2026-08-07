@@ -90,14 +90,16 @@ export const CartPage = () => {
       email: email.trim(),
       address: address.trim(),
       totalPrice: Number(totalPrice),
-      // orderCode: ..... ,
       goods: cartItems,
     };
 
-    const success = await postToOrderHistory(order);
+    const response = await postToOrderHistory(order);
 
-    if (success) {
-      alert(`Order placed successfully! Your order code: ${Response.id}`);
+    if (response) {
+      // Получаем order_code или id из ответа сервера
+      const orderCode = response.order.order_code;
+      alert(`Order placed successfully! Your order code: ${orderCode}`);
+
       handleClearCart();
       setAddress("");
       setEmail("");

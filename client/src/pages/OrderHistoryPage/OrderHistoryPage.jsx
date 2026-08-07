@@ -9,21 +9,37 @@ export const OrderHistoryPage = () => {
   const [filteredOrders, setFilteredOrders] = useState([]);
 
   useEffect(() => {
-    fetchOrderHistory().then((data) => setOrders(data));
+    fetchOrderHistory().then((data) => {
+      if (Array.isArray(data)) {
+        setOrders(data);
+      }
+    });
   }, []);
 
   const handleSearch = () => {
-    if (searchCriteria) {
-      const filtered = orders.filter(
-        (order) =>
-          order.email === searchCriteria.trim() ||
-          order.phone === searchCriteria.trim() ||
-          order.orderCode === searchCriteria.trim(),
-      );
-      setFilteredOrders(filtered);
-    } else {
+    const query = searchCriteria.trim().toLowerCase();
+
+    if (!query) {
       setFilteredOrders([]);
+      return;
     }
+
+    const filtered = orders.filter((order) => {
+      const orderData = order.order_data || order;
+      const customer = orderData.customer || order.customer || {};
+
+      const email = (customer.email || order.email || "").toLowerCase();
+      const phone = (customer.phone || order.phone || "")
+        .toString()
+        .toLowerCase();
+      const orderCode = (order.order_code || order.orderCode || order.id || "")
+        .toString()
+        .toLowerCase();
+
+      return email === query || phone === query || orderCode === query;
+    });
+
+    setFilteredOrders(filtered);
   };
 
   return (
@@ -35,7 +51,7 @@ export const OrderHistoryPage = () => {
             Find your Orders
             <input
               type="text"
-              placeholder="Email or Phone or OrderID"
+              placeholder="Email, Phone or Order Code"
               value={searchCriteria}
               onChange={(e) => setSearchCriteria(e.target.value)}
             />
@@ -49,11 +65,15 @@ export const OrderHistoryPage = () => {
         {filteredOrders.length > 0 ? (
           <ul>
             {filteredOrders.map((order) => (
-              <OrderCard order={order} />
+              <OrderCard key={order.order_code || order.id} order={order} />
             ))}
           </ul>
         ) : (
-          <p className={css.noItemsText}>No orders found</p>
+          <p className={css.noItemsText}>
+            {searchCriteria
+              ? "No orders found"
+              : "Enter your Order Code, Email or Phone to find your order"}
+          </p>
         )}
       </div>
     </div>

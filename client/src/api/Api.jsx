@@ -19,17 +19,17 @@ export const fetchGoods = async () => {
 
 export const postToOrderHistory = async (order) => {
   try {
-    await api.post("/ordersHistory", order);
-    return true;
+    const response = await api.post("/orders", order);
+    return response.data;
   } catch (error) {
     console.log("Error placing order:", error);
-    return false;
+    return null;
   }
 };
 
 export const fetchOrderHistory = async () => {
   try {
-    const response = await api.get("/ordersHistory");
+    const response = await api.get("/orders");
     return response.data;
   } catch (error) {
     console.error("Error fetching order history:", error);
