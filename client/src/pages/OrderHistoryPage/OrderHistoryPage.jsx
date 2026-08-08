@@ -16,7 +16,9 @@ export const OrderHistoryPage = () => {
     });
   }, []);
 
-  const handleSearch = () => {
+  const handleSearch = (e) => {
+    e.preventDefault();
+
     const query = searchCriteria.trim().toLowerCase();
 
     if (!query) {
@@ -46,7 +48,7 @@ export const OrderHistoryPage = () => {
     <div>
       <h1 className={css.title}>Orders History</h1>
       <div className={css.searchSection}>
-        <div>
+        <form onSubmit={handleSearch}>
           <label>
             Find your Orders
             <input
@@ -56,10 +58,10 @@ export const OrderHistoryPage = () => {
               onChange={(e) => setSearchCriteria(e.target.value)}
             />
           </label>
-          <button className={css.serchBtn} onClick={handleSearch}>
+          <button type="submit" className={css.serchBtn}>
             Search
           </button>
-        </div>
+        </form>
       </div>
       <div className={css.ordersSection}>
         {filteredOrders.length > 0 ? (
