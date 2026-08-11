@@ -98,8 +98,7 @@ export const CartPage = () => {
     const response = await postToOrderHistory(order);
 
     if (response) {
-      const orderCode =
-        response.order_code || response.orderCode || response.id;
+      const orderCode = response.order.order_code;
       alert(`Order placed successfully! Your order code: ${orderCode}`);
 
       handleClearCart();
