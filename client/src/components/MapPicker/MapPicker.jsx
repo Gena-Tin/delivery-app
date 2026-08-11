@@ -50,7 +50,6 @@ const LocationMarker = ({ position, setPosition, onLocationSelect }) => {
 };
 
 export const MapPicker = ({ onLocationSelect }) => {
-  // Координаты по умолчанию (Одесса)
   const defaultCenter = [46.4825, 30.7233];
   const [position, setPosition] = useState(null);
 
