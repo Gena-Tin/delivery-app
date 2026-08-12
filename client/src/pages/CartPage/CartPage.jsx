@@ -78,10 +78,11 @@ export const CartPage = () => {
   const handleLocationSelect = (addressText, coordinates) => {
     setAddress(addressText);
     setAddressError(false);
-    setDeliveryLocation({
-      type: "Point",
-      coordinates: coordinates, // [lng, lat]
-    });
+    // setDeliveryLocation({
+    //   type: "Point",
+    //   coordinates: coordinates, // [lng, lat]
+    // });
+    setDeliveryLocation(coordinates); // [lng, lat]
   };
 
   const handleSubmit = async () => {
@@ -92,7 +93,8 @@ export const CartPage = () => {
       address: address.trim(),
       totalPrice: Number(totalPrice),
       goods: cartItems,
-      delivery_location: deliveryLocation, // передаем точные координаты
+      // delivery_location: deliveryLocation, // передаем точные координаты
+      coordinates: deliveryLocation, // Отправляем как 'coordinates'
     };
 
     const response = await postToOrderHistory(order);
