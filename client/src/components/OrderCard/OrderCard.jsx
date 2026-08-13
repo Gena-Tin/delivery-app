@@ -1,7 +1,9 @@
 import css from "./OrderCard.module.css";
+import { useState } from "react";
+import { OrderMapPreview } from "../OrderMapPreview/OrderMapPreview";
 
 export const OrderCard = ({ order }) => {
-  // Достаем вложенный объект order_data (если его нет — берем сам order)
+  const [showMap, setShowMap] = useState(false);
   const orderData = order.order_data || order;
   const customer = orderData.customer || order.customer || {};
   const goodsList = Array.isArray(orderData.goods)
@@ -9,6 +11,11 @@ export const OrderCard = ({ order }) => {
     : Array.isArray(order.goods)
       ? order.goods
       : [];
+
+  // Достаем координаты из delivery_location (GeoJSON)
+  const deliveryLocation =
+    orderData.delivery_location || order.delivery_location;
+  const coordinates = deliveryLocation?.coordinates; // [lng, lat]
 
   const orderCode = order.order_code || order.orderCode || order.id;
   const totalPrice = Number(
@@ -49,6 +56,25 @@ export const OrderCard = ({ order }) => {
         <p>
           <strong>Address:</strong> {customer.address || order.address}
         </p>
+
+        {/* Показываем кнопку только если для заказа сохранены координаты */}
+        {coordinates && (
+          <div className={css.mapToggleWrapper}>
+            <button
+              type="button"
+              className={css.mapToggleBtn}
+              onClick={() => setShowMap((prev) => !prev)}
+            >
+              🌎 {showMap ? "Hide Location on Map" : "Show Location on Map"}
+            </button>
+          </div>
+        )}
+
+        {/* Раскрывающаяся карта с фиксированной меткой */}
+        {showMap && coordinates && (
+          <OrderMapPreview coordinates={coordinates} />
+        )}
+
         <p className={css.totalPrice}>
           <strong>Total Price:</strong> ${totalPrice}
         </p>
