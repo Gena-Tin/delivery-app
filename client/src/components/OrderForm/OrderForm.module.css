@@ -1,0 +1,32 @@
+.orderDataSection {
+  width: 360px;
+}
+
+.totalPrice {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  color: rgb(0, 48, 120);
+  font-weight: 900;
+  font-size: 36px;
+}
+
+.submitBtn {
+  width: 180px;
+  height: 40px;
+  font-size: 20px;
+  box-shadow: 0px 3.43693px 3.43693px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+}
+.submitBtn:hover {
+  box-shadow: 2px 6px 5px -2px rgba(0, 0, 0, 0.54);
+}
+
+label {
+  color: rgb(0, 48, 120);
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+input {
+  height: 35px;
+}
