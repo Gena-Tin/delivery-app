@@ -12,6 +12,12 @@ export const OrderCard = ({ order }) => {
       ? order.goods
       : [];
 
+  const shopNames = [
+    ...new Set(
+      goodsList.map((item) => item.shop_name || item.shopName).filter(Boolean),
+    ),
+  ].join(", ");
+
   // Достаем координаты из delivery_location (GeoJSON)
   const deliveryLocation =
     orderData.delivery_location || order.delivery_location;
@@ -33,6 +39,13 @@ export const OrderCard = ({ order }) => {
         <p>
           <strong>Order Code:</strong> {orderCode}
         </p>
+
+        {shopNames && (
+          <p>
+            <strong>Shop:</strong> {shopNames}
+          </p>
+        )}
+
         <p>
           <strong>Status:</strong> {order.status}
         </p>
@@ -86,7 +99,7 @@ export const OrderCard = ({ order }) => {
             const itemName = item.title || item.goods || item.name;
             const itemCost = Number(item.cost || item.price || 0).toFixed(2);
             const itemQty = item.quantity || 1;
-
+            const itemShop = item.shop_name || item.shopName;
             return (
               <li key={item.id || index} className={css.item}>
                 <div className={css.goodsCard}>
@@ -97,6 +110,9 @@ export const OrderCard = ({ order }) => {
                   )}
                   <div className={css.goodsDescription}>
                     <p className={css.goodsTitle}>{itemName}</p>
+                    {itemShop && (
+                      <p className={css.shopName}>Shop: {itemShop}</p>
+                    )}
                     <p>Cost: ${itemCost}</p>
                     <p>Quantity: {itemQty}</p>
                   </div>
