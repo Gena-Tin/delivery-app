@@ -106,3 +106,39 @@ shopRoutes.get(
     }
   },
 );
+
+// 5. Обновление статуса заказа
+shopRoutes.patch(
+  "/orders/:id/status",
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+
+      if (!status) {
+        res.status(400).json({ error: "Status is required" });
+        return;
+      }
+
+      const result = await query(
+        `UPDATE shop.orders 
+         SET status = $1 
+         WHERE id = $2 
+         RETURNING id, order_code, status`,
+        [status, id],
+      );
+
+      if (result.rowCount === 0) {
+        res.status(404).json({ error: "Order not found" });
+        return;
+      }
+
+      res.json({
+        message: "Status updated successfully",
+        order: result.rows[0],
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+);

@@ -36,3 +36,15 @@ export const fetchOrderHistory = async () => {
     return [];
   }
 };
+
+export const updateOrderStatus = async (orderId, newStatus) => {
+  try {
+    const response = await api.patch(`/orders/${orderId}/status`, {
+      status: newStatus,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating status:", error);
+    return null;
+  }
+};
