@@ -17,6 +17,16 @@ export const fetchGoods = async () => {
   }
 };
 
+export const fetchShops = async () => {
+  try {
+    const response = await api.get("/shops");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching shops:", error);
+    return [];
+  }
+};
+
 export const postToOrderHistory = async (order) => {
   try {
     const response = await api.post("/orders", order);

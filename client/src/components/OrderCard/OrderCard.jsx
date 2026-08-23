@@ -2,7 +2,7 @@ import css from "./OrderCard.module.css";
 import { useState } from "react";
 import { OrderMapPreview } from "../OrderMapPreview/OrderMapPreview";
 
-export const OrderCard = ({ order }) => {
+export const OrderCard = ({ order, onStatusChange }) => {
   const [showMap, setShowMap] = useState(false);
   const orderData = order.order_data || order;
   const customer = orderData.customer || order.customer || {};
@@ -47,8 +47,25 @@ export const OrderCard = ({ order }) => {
         )}
 
         <p>
-          <strong>Status:</strong> {order.status}
+          <strong>Status: </strong>
+          {/* Если передан обработчик onStatusChange — показываем селект (режим Админа) */}
+          {onStatusChange ? (
+            <select
+              value={order.status}
+              onChange={(e) => onStatusChange(order.id, e.target.value)}
+              className={css.statusSelect}
+            >
+              <option value="pending">pending</option>
+              <option value="in_progress">in_progress</option>
+              <option value="delivered">delivered</option>
+              <option value="cancelled">cancelled</option>
+            </select>
+          ) : (
+            <span>{order.status}</span>
+          )}
+          {/* <strong>Status:</strong> {order.status} */}
         </p>
+
         {formattedDate && (
           <p>
             <strong>Date:</strong> {formattedDate}
