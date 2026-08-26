@@ -1,7 +1,11 @@
-import { Router, Request, Response } from "express";
+import { Router, Request, Response, NextFunction } from "express";
+import bcrypt from "bcrypt";
+import jwtLib from "jsonwebtoken";
 import { query } from "../config/db.js";
 
 export const shopRoutes = Router();
+
+const JWT_SECRET = process.env.JWT_SECRET || "super_secret_admin_key";
 
 // Вспомогательная функция для генерации случайного кода заказа
 const generateOrderCode = (length = 4): string => {
@@ -13,6 +17,82 @@ const generateOrderCode = (length = 4): string => {
   }
   return result;
 };
+
+// Middleware для проверки JWT в защищенных запросах
+export const verifyToken = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    res.status(401).json({ error: "Access denied. No token provided." });
+    return;
+  }
+
+  const token = authHeader.split(" ")[1];
+  try {
+    const decoded = jwtLib.verify(token, JWT_SECRET);
+    (req as any).user = decoded;
+    next();
+  } catch (error) {
+    res.status(403).json({ error: "Invalid or expired token." });
+  }
+};
+
+// ==========================================
+// AUTH ROUTE
+// ==========================================
+shopRoutes.post(
+  "/login",
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { username, password } = req.body;
+
+      if (!username || !password) {
+        res.status(400).json({ error: "Username and password are required" });
+        return;
+      }
+
+      const result = await query(
+        "SELECT * FROM shop.users WHERE username = $1",
+        [username],
+      );
+      if (result.rows.length === 0) {
+        res.status(401).json({ error: "Invalid credentials" });
+        return;
+      }
+
+      const user = result.rows[0];
+      const isPasswordValid = await bcrypt.compare(
+        password,
+        user.password_hash,
+      );
+
+      if (!isPasswordValid) {
+        res.status(401).json({ error: "Invalid credentials" });
+        return;
+      }
+
+      // Генерируем JWT на 8 часов
+      const token = jwtLib.sign(
+        { id: user.id, username: user.username },
+        JWT_SECRET,
+        {
+          expiresIn: "8h",
+        },
+      );
+
+      res.json({ message: "Login successful", token });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+);
+
+// ==========================================
+// SHOP & GOODS ROUTES
+// ==========================================
 
 // 1. Получить все магазины
 shopRoutes.get("/shops", async (req: Request, res: Response): Promise<void> => {
@@ -39,6 +119,10 @@ shopRoutes.get("/goods", async (req: Request, res: Response): Promise<void> => {
   }
 });
 
+// ==========================================
+// ORDERS ROUTES
+// ==========================================
+
 // 3. Создать новый заказ (с geo-координатами)
 shopRoutes.post(
   "/orders",
@@ -47,7 +131,6 @@ shopRoutes.post(
       const { name, phone, email, address, goods, totalPrice, coordinates } =
         req.body;
 
-      // Простая валидация входных данных
       if (!name || !phone || !goods || !totalPrice) {
         res.status(400).json({ error: "Missing required fields" });
         return;
@@ -55,7 +138,6 @@ shopRoutes.post(
 
       const orderCode = generateOrderCode();
 
-      // Формируем NoSQL-структуру для хранения в JSONB
       const orderData = {
         customer: {
           name: name,
@@ -63,22 +145,20 @@ shopRoutes.post(
           email: email || null,
           address: address || "Delivery to coordinates",
         },
-        goods: goods, // Массив купленных товаров с ценами на момент покупки
+        goods: goods,
         totalPrice: totalPrice,
-        // Сохраняем геометку в стандартном формате GeoJSON
         delivery_location: coordinates
           ? {
               type: "Point",
-              coordinates: coordinates, // Ожидаем массив [lng, lat] с фронтенда
+              coordinates: coordinates,
             }
           : null,
       };
 
-      // Записываем в базу данных
       const result = await query(
         `INSERT INTO shop.orders (order_code, order_data) 
-       VALUES ($1, $2) 
-       RETURNING id, order_code, status, created_at`,
+         VALUES ($1, $2) 
+         RETURNING id, order_code, status, created_at`,
         [orderCode, JSON.stringify(orderData)],
       );
 
@@ -107,9 +187,10 @@ shopRoutes.get(
   },
 );
 
-// 5. Обновление статуса заказа
+// 5. Обновление статуса заказа (ЗАЩИЩЕНО verifyToken)
 shopRoutes.patch(
   "/orders/:id/status",
+  verifyToken,
   async (req: Request, res: Response): Promise<void> => {
     try {
       const { id } = req.params;
