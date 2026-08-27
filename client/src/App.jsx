@@ -9,20 +9,29 @@ import { Header } from "./components/Header/Header";
 import { Footer } from "./components/Footer/Footer";
 import { ProtectedRoute } from "./components/ProtectedRoute/ProtectedRoute";
 import { LoginPage } from "./pages/LoginPage/LoginPage";
+import { loginAdmin } from "./api/Api";
 
 export const App = () => {
   const [token, setToken] = useState(() => localStorage.getItem("adminToken"));
 
   const handleLogin = async (username, password) => {
-    // тут бедет реальный запрос к бекенду
-    if (username === "admin" && password === "admin123") {
-      const mockToken = "fake-jwt-token";
-      localStorage.setItem("adminToken", mockToken);
-      setToken(mockToken);
-    } else {
-      throw new Error("Invalid username or password");
+    const data = await loginAdmin(username, password);
+    if (data && data.token) {
+      localStorage.setItem("adminToken", data.token);
+      setToken(data.token);
     }
   };
+
+  // const handleLogin = async (username, password) => {
+  //   // тут бедет реальный запрос к бекенду
+  //   if (username === "admin" && password === "admin123") {
+  //     const mockToken = "fake-jwt-token";
+  //     localStorage.setItem("adminToken", mockToken);
+  //     setToken(mockToken);
+  //   } else {
+  //     throw new Error("Invalid username or password");
+  //   }
+  // };
 
   return (
     <div className="container">
